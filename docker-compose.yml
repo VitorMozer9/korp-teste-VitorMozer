@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  stock-service:
+    build:
+      context: ./services/stock
+      dockerfile: Dockerfile
+    container_name: korp-stock
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - ENV=production
+    networks:
+      - korp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  billing-service:
+    build:
+      context: ./services/billing
+      dockerfile: Dockerfile
+    container_name: korp-billing
+    ports:
+      - "8082:8082"
+    environment:
+      - PORT=8082
+      - STOCK_SERVICE_URL=http://stock-service:8081
+      - ENV=production
+    depends_on:
+      - stock-service
+    networks:
+      - korp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  korp-network:
+    driver: bridge
