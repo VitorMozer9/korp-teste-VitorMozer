@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../models/product.model';
@@ -20,7 +21,8 @@ import { Product } from '../../../models/product.model';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
@@ -29,35 +31,25 @@ export class ProductListComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   loading = true;
   error: string | null = null;
-  displayedColumns: string[] = ['code', 'description', 'balance'];
+  displayedColumns: string[] = ['code', 'description', 'balance', 'actions'];
   
   private subscription?: Subscription;
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private snackBar: MatSnackBar
+  ) {}
 
-  /**
-   * ngOnInit - Ciclo de vida do Angular
-   * Executado quando o componente é inicializado
-   */
   ngOnInit(): void {
     this.loadProducts();
   }
 
-  /**
-   * ngOnDestroy - Ciclo de vida do Angular
-   * Executado quando o componente é destruído
-   * IMPORTANTE: Limpar subscriptions para evitar memory leaks
-   */
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
 
-  /**
-   * Carrega a lista de produtos
-   * Usa RxJS Observable do serviço
-   */
   loadProducts(): void {
     this.loading = true;
     this.error = null;
@@ -75,10 +67,43 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Recarrega a lista de produtos
-   */
+  deleteProduct(product: Product): void {
+    if (!confirm(`Tem certeza que deseja excluir o produto ${product.code} - ${product.description}?`)) {
+      return;
+    }
+
+    this.loading = true;
+    this.productService.deleteProduct(product.id).subscribe({
+      next: () => {
+        this.showSuccess('Produto excluído com sucesso!');
+        this.loadProducts();
+      },
+      error: (error) => {
+        this.showError(error.message);
+        this.loading = false;
+      }
+    });
+  }
+
   refresh(): void {
     this.loadProducts();
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar']
+    });
   }
 }

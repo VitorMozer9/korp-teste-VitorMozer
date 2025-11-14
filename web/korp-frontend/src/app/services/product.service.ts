@@ -57,6 +57,16 @@ export class ProductService {
   }
 
   /**
+   * Deleta um produto
+   */
+  deleteProduct(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      tap(() => this.getProducts().subscribe()), // Recarrega lista
+      catchError(this.handleError)
+    );
+  }
+
+  /**
    * Tratamento centralizado de erros
    * Retorna mensagens amigáveis para o usuário
    */

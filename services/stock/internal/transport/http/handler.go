@@ -120,6 +120,23 @@ func (h *Handler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, product)
 }
 
+// DeleteProduct deleta um produto
+func (h *Handler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	
+	err := h.productService.DeleteProduct(id)
+	if err != nil {
+		if err == domain.ErrProductNotFound {
+			respondError(w, http.StatusNotFound, "Produto não encontrado", err.Error())
+		} else {
+			respondError(w, http.StatusInternalServerError, "Erro ao deletar produto", err.Error())
+		}
+		return
+	}
+
+	respondJSON(w, http.StatusOK, map[string]string{"message": "Produto deletado com sucesso"})
+}
+
 // ReserveStock reserva estoque (chamado pelo serviço de Billing)
 func (h *Handler) ReserveStock(w http.ResponseWriter, r *http.Request) {
 	var requests []domain.ReservationRequest

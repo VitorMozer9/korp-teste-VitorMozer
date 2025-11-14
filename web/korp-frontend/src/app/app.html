@@ -1,17 +1,16 @@
 <div class="app-container">
-  <!-- Toolbar Superior -->
   <mat-toolbar class="toolbar">
     <div class="toolbar-content">
       <div class="logo-section">
         <mat-icon class="logo-icon">receipt_long</mat-icon>
-        <span class="app-title">{{ title() }}</span>
+        <span class="app-title">{{ title }}</span>
       </div>
       <div class="nav-section">
-        <button mat-button routerLink="/products" routerLinkActive="active">
+        <button mat-button [routerLink]="['/products']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
           <mat-icon>inventory_2</mat-icon>
           Produtos
         </button>
-        <button mat-button routerLink="/invoices" routerLinkActive="active">
+        <button mat-button [routerLink]="['/invoices']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
           <mat-icon>description</mat-icon>
           Notas Fiscais
         </button>
@@ -19,13 +18,11 @@
     </div>
   </mat-toolbar>
 
-  <!-- Conteúdo Principal -->
   <main class="main-content">
     <router-outlet></router-outlet>
   </main>
 
-  <!-- Footer -->
   <footer class="footer">
-    <p>&copy; 2024 Korp Teste - Vitor Mozer | Sistema de Emissão de Notas Fiscais</p>
+    <p>&copy; 2025 Korp Teste - Vitor Mozer | Sistema de Emissão de Notas Fiscais</p>
   </footer>
 </div>

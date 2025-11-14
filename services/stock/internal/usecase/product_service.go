@@ -81,6 +81,11 @@ func (s *ProductService) UpdateProduct(id, code, description string, balance int
 	return product, nil
 }
 
+// DeleteProduct deleta um produto
+func (s *ProductService) DeleteProduct(id string) error {
+	return s.repo.Delete(id)
+}
+
 // ReserveStock reserva uma quantidade de estoque de um produto
 // Esta função será chamada pelo serviço de Billing
 func (s *ProductService) ReserveStock(productID string, quantity int) error {

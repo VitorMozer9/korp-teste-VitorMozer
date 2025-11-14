@@ -41,6 +41,7 @@ func NewRouter(handler *Handler) http.Handler {
 			r.Post("/", handler.CreateProduct)
 			r.Get("/{id}", handler.GetProduct)
 			r.Put("/{id}", handler.UpdateProduct)
+			r.Delete("/{id}", handler.DeleteProduct)
 
 			// Endpoint para reserva de estoque (chamado pelo Billing Service)
 			r.Post("/reserve", handler.ReserveStock)
