@@ -31,7 +31,7 @@ Korp_Teste_SeuNome/
 │   ├── stock/       # Microsserviço de Estoque
 │   └── billing/     # Microsserviço de Faturamento
 ├── pkg/             # Pacotes compartilhados
-├── frontend/        # Aplicação Angular
+├── web/             # Aplicação Angular
 └── docker-compose.yml
 ```
 
@@ -139,4 +139,5 @@ POST   /api/invoices/:id/print    # Imprime (fecha) nota
 ## 👨‍💻 Autor
 
 Vitor Mozer - [GitHub](https://github.com/VitorMozer9)
+
 
