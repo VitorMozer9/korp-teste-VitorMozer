@@ -14,7 +14,7 @@ O projeto segue os princípios de **Clean Architecture** e **SOLID**, dividido e
 ## 🚀 Tecnologias
 
 ### Backend
-- Go 1.21+
+- Go 1.25.1
 - Chi Router (HTTP)
 - Arquitetura Limpa (Domain, UseCase, Repository, Transport)
 
@@ -124,6 +124,7 @@ POST   /api/products          # Cria produto
 GET    /api/products/:id      # Busca produto
 PUT    /api/products/:id      # Atualiza produto
 POST   /api/products/reserve  # Reserva estoque
+DELETE /api/products/:id      # Deleta estoque 
 ```
 
 ### Billing Service (http://localhost:8082)
@@ -138,3 +139,4 @@ POST   /api/invoices/:id/print    # Imprime (fecha) nota
 ## 👨‍💻 Autor
 
 Vitor Mozer - [GitHub](https://github.com/VitorMozer9)
+
