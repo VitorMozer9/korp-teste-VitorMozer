@@ -1,0 +1,163 @@
+.container {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  
+  p {
+    margin-top: 1rem;
+    color: #666;
+  }
+}
+
+.error-card {
+  padding: 2rem;
+  text-align: center;
+  background-color: #fff3f3;
+  
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    color: #E61924;
+    margin-bottom: 1rem;
+  }
+}
+
+.invoice-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.invoice-header {
+  padding: 2rem;
+  background: linear-gradient(135deg, #2D3948 0%, #1a252f 100%);
+  color: white;
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    margin: 0.25rem 0;
+    opacity: 0.9;
+  }
+}
+
+.invoice-items {
+  padding: 2rem;
+
+  h2 {
+    margin: 0 0 1.5rem 0;
+    color: #2D3948;
+  }
+}
+
+.items-table {
+  width: 100%;
+  margin-bottom: 1.5rem;
+
+  th {
+    background-color: #f5f5f5;
+    color: #2D3948;
+    font-weight: 600;
+    padding: 1rem;
+  }
+
+  td {
+    padding: 1rem;
+  }
+}
+
+.total-section {
+  text-align: right;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  color: #2D3948;
+}
+
+.actions-section {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.warning-card, .success-card {
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.warning-card {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+
+  mat-icon {
+    color: #ffc107;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  strong {
+    color: #856404;
+  }
+
+  p {
+    margin: 0.5rem 0 0 0;
+    color: #666;
+  }
+}
+
+.success-card {
+  background-color: #d4edda;
+  border-left: 4px solid #4caf50;
+
+  mat-icon {
+    color: #4caf50;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  strong {
+    color: #155724;
+  }
+
+  p {
+    margin: 0.5rem 0 0 0;
+    color: #666;
+  }
+}
+
+.status-open {
+  background-color: #2196f3 !important;
+  color: white !important;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.status-closed {
+  background-color: #4caf50 !important;
+  color: white !important;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}

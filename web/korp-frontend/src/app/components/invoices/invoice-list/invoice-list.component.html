@@ -1,0 +1,106 @@
+<div class="container">
+  <div class="header">
+    <h1>Notas Fiscais</h1>
+    <div class="actions">
+      <button mat-raised-button color="primary" routerLink="/invoices/new">
+        <mat-icon>add</mat-icon>
+        Nova Nota Fiscal
+      </button>
+      <button mat-icon-button (click)="refresh()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Carregando notas fiscais...</p>
+  </div>
+
+  <!-- Erro -->
+  <mat-card *ngIf="error && !loading" class="error-card">
+    <mat-card-content>
+      <div class="error-content">
+        <mat-icon color="warn">error</mat-icon>
+        <div>
+          <h3>Erro ao carregar notas fiscais</h3>
+          <p>{{ error }}</p>
+        </div>
+      </div>
+      <button mat-raised-button color="primary" (click)="refresh()">
+        Tentar Novamente
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabela de Notas Fiscais -->
+  <mat-card *ngIf="!loading && !error" class="table-card">
+    <table mat-table [dataSource]="invoices" class="invoices-table">
+      
+      <!-- Coluna Número -->
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef>Nº Nota</th>
+        <td mat-cell *matCellDef="let invoice">
+          <strong>#{{ invoice.number }}</strong>
+        </td>
+      </ng-container>
+
+      <!-- Coluna Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let invoice">
+          <mat-chip-set>
+            <mat-chip [class.status-open]="invoice.status === InvoiceStatus.OPEN"
+                      [class.status-closed]="invoice.status === InvoiceStatus.CLOSED">
+              {{ invoice.status }}
+            </mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <!-- Coluna Itens -->
+      <ng-container matColumnDef="items">
+        <th mat-header-cell *matHeaderCellDef>Itens</th>
+        <td mat-cell *matCellDef="let invoice">
+          {{ invoice.items.length }} produto(s) / {{ getTotalItems(invoice) }} unidade(s)
+        </td>
+      </ng-container>
+
+      <!-- Coluna Data Criação -->
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef>Data Criação</th>
+        <td mat-cell *matCellDef="let invoice">
+          {{ formatDate(invoice.created_at) }}
+        </td>
+      </ng-container>
+
+      <!-- Coluna Ações -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let invoice">
+          <button mat-raised-button 
+                  color="accent"
+                  [routerLink]="['/invoices', invoice.id, 'print']"
+                  [disabled]="invoice.status === InvoiceStatus.CLOSED">
+            <mat-icon>print</mat-icon>
+            Imprimir
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Mensagem quando não há notas -->
+    <div *ngIf="invoices.length === 0" class="empty-state">
+      <mat-icon>receipt_long</mat-icon>
+      <h3>Nenhuma nota fiscal cadastrada</h3>
+      <p>Comece criando sua primeira nota fiscal</p>
+      <button mat-raised-button color="primary" routerLink="/invoices/new">
+        Cadastrar Nota Fiscal
+      </button>
+    </div>
+  </mat-card>
+</div>

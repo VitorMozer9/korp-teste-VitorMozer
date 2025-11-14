@@ -1,0 +1,106 @@
+<div class="container">
+  
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Carregando nota fiscal...</p>
+  </div>
+
+  <!-- Erro -->
+  <mat-card *ngIf="error && !loading" class="error-card">
+    <mat-icon>error</mat-icon>
+    <h3>Erro ao carregar nota fiscal</h3>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Voltar
+    </button>
+  </mat-card>
+
+  <!-- Nota Fiscal -->
+  <div *ngIf="invoice && !loading" class="invoice-container">
+    
+    <!-- Cabeçalho -->
+    <mat-card class="invoice-header">
+      <div class="header-content">
+        <div>
+          <h1>Nota Fiscal Nº {{ invoice.number }}</h1>
+          <p class="subtitle">Criada em: {{ formatDate(invoice.created_at) }}</p>
+          <p class="subtitle" *ngIf="invoice.closed_at">Fechada em: {{ formatDate(invoice.closed_at) }}</p>
+        </div>
+        <mat-chip-set>
+          <mat-chip [class.status-open]="invoice.status === InvoiceStatus.OPEN"
+                    [class.status-closed]="invoice.status === InvoiceStatus.CLOSED">
+            {{ invoice.status }}
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    </mat-card>
+
+    <!-- Itens da Nota -->
+    <mat-card class="invoice-items">
+      <h2>Itens da Nota Fiscal</h2>
+      
+      <table mat-table [dataSource]="invoice.items" class="items-table">
+        
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let item">{{ item.product_code }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Descrição</th>
+          <td mat-cell *matCellDef="let item">{{ item.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>Quantidade</th>
+          <td mat-cell *matCellDef="let item">
+            <strong>{{ item.quantity }}</strong>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div class="total-section">
+        <strong>Total de Unidades: {{ getTotalQuantity() }}</strong>
+      </div>
+    </mat-card>
+
+    <!-- Ações -->
+    <div class="actions-section">
+      <button mat-raised-button (click)="goBack()" [disabled]="printing">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </button>
+
+      <button mat-raised-button 
+              color="primary" 
+              (click)="printInvoice()"
+              [disabled]="invoice.status === InvoiceStatus.CLOSED || printing">
+        <mat-icon *ngIf="!printing">print</mat-icon>
+        <mat-spinner *ngIf="printing" diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+        <span *ngIf="!printing">Imprimir Nota Fiscal</span>
+        <span *ngIf="printing">Imprimindo...</span>
+      </button>
+    </div>
+
+    <!-- Aviso -->
+    <mat-card *ngIf="invoice.status === InvoiceStatus.OPEN" class="warning-card">
+      <mat-icon>info</mat-icon>
+      <div>
+        <strong>Atenção:</strong>
+        <p>Ao imprimir esta nota fiscal, o status será alterado para FECHADA e o saldo dos produtos será atualizado automaticamente. Esta ação não pode ser desfeita.</p>
+      </div>
+    </mat-card>
+
+    <mat-card *ngIf="invoice.status === InvoiceStatus.CLOSED" class="success-card">
+      <mat-icon>check_circle</mat-icon>
+      <div>
+        <strong>Nota Fiscal Impressa</strong>
+        <p>Esta nota já foi impressa e o estoque foi atualizado.</p>
+      </div>
+    </mat-card>
+  </div>
+</div>

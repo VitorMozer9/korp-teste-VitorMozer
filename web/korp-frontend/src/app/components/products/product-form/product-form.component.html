@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="header">
+    <h1>Cadastrar Produto</h1>
+  </div>
+
+  <mat-card class="form-card">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Campo Código -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Código do Produto</mat-label>
+        <input matInput formControlName="code" placeholder="Ex: PROD001" maxlength="20">
+        <mat-icon matPrefix>qr_code</mat-icon>
+        <mat-error *ngIf="code?.hasError('required')">
+          Código é obrigatório
+        </mat-error>
+        <mat-error *ngIf="code?.hasError('minlength')">
+          Código deve ter no mínimo 3 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Campo Descrição -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descrição</mat-label>
+        <input matInput formControlName="description" placeholder="Ex: Notebook Dell Inspiron">
+        <mat-icon matPrefix>description</mat-icon>
+        <mat-error *ngIf="description?.hasError('required')">
+          Descrição é obrigatória
+        </mat-error>
+        <mat-error *ngIf="description?.hasError('minlength')">
+          Descrição deve ter no mínimo 5 caracteres
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Campo Saldo -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Saldo Inicial</mat-label>
+        <input matInput type="number" formControlName="balance" placeholder="0" min="0">
+        <mat-icon matPrefix>inventory</mat-icon>
+        <mat-error *ngIf="balance?.hasError('required')">
+          Saldo é obrigatório
+        </mat-error>
+        <mat-error *ngIf="balance?.hasError('min')">
+          Saldo não pode ser negativo
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Botões de Ação -->
+      <div class="form-actions">
+        <button mat-raised-button type="button" (click)="onCancel()" [disabled]="loading">
+          Cancelar
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading || productForm.invalid">
+          <mat-icon *ngIf="!loading">save</mat-icon>
+          <span *ngIf="loading">Salvando...</span>
+          <span *ngIf="!loading">Cadastrar Produto</span>
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="header">
+    <h1>Nova Nota Fiscal</h1>
+  </div>
+
+  <mat-card *ngIf="loadingProducts" class="loading-card">
+    <p>Carregando produtos disponíveis...</p>
+  </mat-card>
+
+  <mat-card *ngIf="!loadingProducts && products.length === 0" class="warning-card">
+    <mat-icon>warning</mat-icon>
+    <div>
+      <h3>Nenhum produto com estoque disponível</h3>
+      <p>Cadastre produtos com saldo antes de criar uma nota fiscal</p>
+    </div>
+    <button mat-raised-button color="primary" routerLink="/products/new">
+      Cadastrar Produto
+    </button>
+  </mat-card>
+
+  <mat-card *ngIf="!loadingProducts && products.length > 0" class="form-card">
+    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+      
+      <h2>Itens da Nota Fiscal</h2>
+
+      <table mat-table [dataSource]="items.controls" class="items-table">
+        
+        <!-- Coluna Produto -->
+        <ng-container matColumnDef="product">
+          <th mat-header-cell *matHeaderCellDef>Produto</th>
+          <td mat-cell *matCellDef="let item; let i = index">
+            <div [formGroup]="item">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Selecione o produto</mat-label>
+                <mat-select formControlName="product_id">
+                  <mat-option *ngFor="let product of products" [value]="product.id">
+                    {{ product.code }} - {{ product.description }} (Saldo: {{ product.balance }})
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Coluna Quantidade -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>Quantidade</th>
+          <td mat-cell *matCellDef="let item; let i = index">
+            <div [formGroup]="item">
+              <mat-form-field appearance="outline">
+                <mat-label>Quantidade</mat-label>
+                <input matInput type="number" formControlName="quantity" min="1">
+                <mat-error *ngIf="!validateQuantity(i)">
+                  Quantidade excede saldo disponível
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Coluna Ações -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let item; let i = index">
+            <button mat-icon-button color="warn" type="button" (click)="removeItem(i)" 
+                    [disabled]="items.length === 1">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <button mat-stroked-button type="button" (click)="addItem()" class="add-item-btn">
+        <mat-icon>add</mat-icon>
+        Adicionar Item
+      </button>
+
+      <!-- Botões de Ação -->
+      <div class="form-actions">
+        <button mat-raised-button type="button" (click)="onCancel()" [disabled]="loading">
+          Cancelar
+        </button>
+        <button mat-raised-button color="primary" type="submit" 
+                [disabled]="loading || invoiceForm.invalid || items.length === 0">
+          <span *ngIf="loading">Criando...</span>
+          <span *ngIf="!loading">Criar Nota Fiscal</span>
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>
